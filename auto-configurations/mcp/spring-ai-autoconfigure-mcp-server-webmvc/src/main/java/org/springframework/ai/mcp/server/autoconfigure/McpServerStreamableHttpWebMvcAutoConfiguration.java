@@ -19,11 +19,9 @@ package org.springframework.ai.mcp.server.autoconfigure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.transport.WebMvcStreamableServerTransportProvider;
 import io.modelcontextprotocol.spec.McpSchema;
-
 import org.springframework.ai.mcp.server.common.autoconfigure.McpServerAutoConfiguration;
 import org.springframework.ai.mcp.server.common.autoconfigure.McpServerStdioDisabledCondition;
 import org.springframework.ai.mcp.server.common.autoconfigure.properties.McpServerProperties;
-import org.springframework.ai.mcp.server.common.autoconfigure.properties.McpServerStreamableHttpProperties;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -38,7 +36,7 @@ import org.springframework.web.servlet.function.RouterFunction;
  */
 @AutoConfiguration(before = McpServerAutoConfiguration.class)
 @ConditionalOnClass({ McpSchema.class })
-@EnableConfigurationProperties({ McpServerProperties.class, McpServerStreamableHttpProperties.class })
+@EnableConfigurationProperties({ McpServerProperties.class })
 @Conditional({ McpServerStdioDisabledCondition.class,
 		McpServerAutoConfiguration.EnabledStreamableServerCondition.class })
 public class McpServerStreamableHttpWebMvcAutoConfiguration {
@@ -46,15 +44,15 @@ public class McpServerStreamableHttpWebMvcAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public WebMvcStreamableServerTransportProvider webMvcStreamableServerTransportProvider(
-			ObjectProvider<ObjectMapper> objectMapperProvider, McpServerStreamableHttpProperties serverProperties) {
+			ObjectProvider<ObjectMapper> objectMapperProvider, McpServerProperties serverProperties) {
 
 		ObjectMapper objectMapper = objectMapperProvider.getIfAvailable(ObjectMapper::new);
 
 		return WebMvcStreamableServerTransportProvider.builder()
 			.objectMapper(objectMapper)
-			.mcpEndpoint(serverProperties.getMcpEndpoint())
-			.keepAliveInterval(serverProperties.getKeepAliveInterval())
-			.disallowDelete(serverProperties.isDisallowDelete())
+			.mcpEndpoint(serverProperties.getStreamable().getMcpEndpoint())
+			.keepAliveInterval(serverProperties.getStreamable().getKeepAliveInterval())
+			.disallowDelete(serverProperties.getStreamable().isDisallowDelete())
 			.build();
 	}
 

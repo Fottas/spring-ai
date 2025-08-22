@@ -19,10 +19,9 @@ package org.springframework.ai.mcp.server.autoconfigure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.transport.WebFluxStatelessServerTransport;
 import io.modelcontextprotocol.spec.McpSchema;
-
 import org.springframework.ai.mcp.server.common.autoconfigure.McpServerStatelessAutoConfiguration;
 import org.springframework.ai.mcp.server.common.autoconfigure.McpServerStdioDisabledCondition;
-import org.springframework.ai.mcp.server.common.autoconfigure.properties.McpServerStreamableHttpProperties;
+import org.springframework.ai.mcp.server.common.autoconfigure.properties.McpServerProperties;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -37,7 +36,7 @@ import org.springframework.web.reactive.function.server.RouterFunction;
  */
 @AutoConfiguration(before = McpServerStatelessAutoConfiguration.class)
 @ConditionalOnClass({ McpSchema.class })
-@EnableConfigurationProperties(McpServerStreamableHttpProperties.class)
+@EnableConfigurationProperties(McpServerProperties.class)
 @Conditional({ McpServerStdioDisabledCondition.class,
 		McpServerStatelessAutoConfiguration.EnabledStatelessServerCondition.class })
 public class McpServerStatelessWebFluxAutoConfiguration {
@@ -45,13 +44,13 @@ public class McpServerStatelessWebFluxAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public WebFluxStatelessServerTransport webFluxStatelessServerTransport(
-			ObjectProvider<ObjectMapper> objectMapperProvider, McpServerStreamableHttpProperties serverProperties) {
+			ObjectProvider<ObjectMapper> objectMapperProvider, McpServerProperties serverProperties) {
 
 		ObjectMapper objectMapper = objectMapperProvider.getIfAvailable(ObjectMapper::new);
 
 		return WebFluxStatelessServerTransport.builder()
 			.objectMapper(objectMapper)
-			.messageEndpoint(serverProperties.getMcpEndpoint())
+			.messageEndpoint(serverProperties.getStateless().getMcpEndpoint())
 			// .disallowDelete(serverProperties.isDisallowDelete())
 			.build();
 	}
