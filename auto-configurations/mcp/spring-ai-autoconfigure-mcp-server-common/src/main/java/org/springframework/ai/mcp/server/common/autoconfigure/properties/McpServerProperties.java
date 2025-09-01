@@ -220,7 +220,7 @@ public class McpServerProperties {
 	}
 
 	public Sse getSse() {
-		return sse;
+		return this.sse;
 	}
 
 	public void setSse(Sse sse) {
@@ -228,7 +228,7 @@ public class McpServerProperties {
 	}
 
 	public Streamable getStreamable() {
-		return streamable;
+		return this.streamable;
 	}
 
 	public void setStreamable(Streamable streamable) {
@@ -236,7 +236,7 @@ public class McpServerProperties {
 	}
 
 	public Stateless getStateless() {
-		return stateless;
+		return this.stateless;
 	}
 
 	public void setStateless(Stateless stateless) {
@@ -244,7 +244,7 @@ public class McpServerProperties {
 	}
 
 	public ToolChangeNotification getToolChangeNotification() {
-		return toolChangeNotification;
+		return this.toolChangeNotification;
 	}
 
 	public void setToolChangeNotification(ToolChangeNotification toolChangeNotification) {
